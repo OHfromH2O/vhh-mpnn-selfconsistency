@@ -1,0 +1,4 @@
+pdb_id,chain_lengths,has_vhh,vhh_by,vhh_name,has_protein_antigen,antigen_len,entities
+8OP0,"[14, 129]",True,name,VHH Z70 mutant 20,False,0,['A']:129aa:VHH Z70 mutant 20; ['B']:14aa:Tau PHF6 peptide
+8YVJ,"[121, 129]",True,name,H5.2 nanobody (VHH),True,121,['A']:129aa:H5.2 nanobody (VHH); ['B']:121aa:Toxin A
+7QCQ,"[14, 133]",True,name,VHH Z70,False,0,['AAA']:133aa:VHH Z70; ['BBB']:14aa:Tau 301-312

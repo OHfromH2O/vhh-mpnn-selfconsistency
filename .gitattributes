@@ -1,0 +1,9 @@
+# 줄바꿈을 LF로 고정합니다.
+# 구조·서열 데이터(.pdb, .fasta, .csv)가 플랫폼마다 CRLF/LF로 달라지면
+# 파일 해시가 바뀌어 "같은 결과인지" 확인하기 어려워집니다.
+* text=auto eol=lf
+
+# 바이너리
+*.png binary
+*.pdf binary
+*.zip binary
