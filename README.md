@@ -187,8 +187,12 @@ native보다 높게 나왔지만, 같은 실행에서 **무작위 치환 대조�
 
 1. **실험 검증 없음.** in silico self-consistency는 발현성·결합력의 대리 지표가 아닙니다.
 2. **ipTM 측정 실패.** 양성 대조군이 임계값에 미달하여 계면 재현을 평가할 수 없었습니다.
-   원인은 확인하지 않았습니다 — 축소 설정(모델 1개·recycle 3·단일 seed), 항체–항원 계면에서의
-   AF2-multimer 한계, 항원의 β-solenoid 반복 구조가 후보입니다.
+   AlphaFold-Multimer의 항체–항원 복합체 예측 성능이 일반 복합체보다 크게 낮다는 것은
+   보고된 바입니다 — 427개 복합체 벤치마크에서 상위 1순위 예측이 medium 이상 정확도에
+   도달한 비율이 **나노바디–항원 27%(n=132)**, 기존 항체 14%(n=295)로,
+   본 결과는 실패하는 다수에 해당할 수 있습니다 (Yin & Pierce 2024).
+   다만 본 실행이 그 이유로 실패했다고 단정하지는 않습니다. 축소 설정(모델 1개·recycle 3·
+   단일 seed)과 항원의 β-solenoid 반복 구조도 후보이며, 이를 분리하는 실험은 하지 않았습니다.
 3. **n이 작습니다.** S1은 조건당 14건, S2는 조건당 1–3건. 통계적 검정은 수행하지 않았습니다.
 4. **AF2 모델 1개 · recycle 3회 · 단일 seed**로 축소 실행 — 예측 불확실성을 과소평가합니다.
 5. **S2 선정 편향.** 13건은 ESMFold pLDDT 상위로 골랐으므로 설계 분포의 대표 표본이 아니라
@@ -256,6 +260,19 @@ figures/
 ```
 
 상세 분석과 해석은 [`RESULTS_ANALYSIS.md`](RESULTS_ANALYSIS.md) 참조.
+
+---
+
+## 참고문헌
+
+한계 2번의 근거입니다. 상세 논의와 추가 문헌은 [`RESULTS_ANALYSIS.md`](RESULTS_ANALYSIS.md) §11.
+
+- Yin R, Pierce BG (2024) Evaluation of AlphaFold antibody–antigen modeling with implications
+  for improving predictive accuracy. *Protein Science* 33(1):e4865.
+  [doi:10.1002/pro.4865](https://doi.org/10.1002/pro.4865)
+- Yin R, Feng BY, Varshney A, Pierce BG (2022) Benchmarking AlphaFold for protein complex
+  modeling reveals accuracy determinants. *Protein Science* 31(8):e4379.
+  [doi:10.1002/pro.4379](https://doi.org/10.1002/pro.4379)
 
 ---
 
