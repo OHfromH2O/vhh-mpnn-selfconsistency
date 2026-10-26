@@ -13,7 +13,7 @@ ProteinMPNN으로 재설계한 나노바디 서열이, 독립적인 구조 예�
    해상도 ≤ 2.5 Å · 총 ≤ 300잔기 조건을 만족한 3건 중, 항원이 펩타이드가 아닌 단백질인 것은 8YVJ뿐이었습니다
    (나머지 2건은 14 aa Tau PHF6 펩타이드 복합체). → `data/chain_composition.csv`
 2. PDBFixer로 전처리하고, 재설계 영역을 **항원과 4.5 Å 이내 접촉하는 잔기 ∪ CDR3** (34/129자리)로 정의했습니다.
-   → `work/01_clean/designable.json`, 정의 변경 사유는 `work/01_clean/README_definition_note.md`
+   → `work/01_clean/designable.json`, 정의 변경 사유는 [`work/01_clean/README_definition_note.md`](work/01_clean/README_definition_note.md)
 3. ProteinMPNN으로 **2모드 × 3온도 × 8서열 = 48 설계 서열**을 생성했습니다.
    - M1: VHH 전체 129자리 재설계 / M2: 위 34자리만 재설계(프레임워크 고정)
    - temperature 0.1 / 0.2 / 0.3
@@ -42,10 +42,10 @@ ProteinMPNN으로 재설계한 나노바디 서열이, 독립적인 구조 예�
 
 ## 사전 등록된 기준
 
-판정 기준은 `protein_design_sc_protocol.md`(2026-10-22) §0.3에 코드 실행 전부터 적혀 있었고,
-결과를 본 뒤 완화하거나 변경하지 않았습니다. 다만 이를 담은 `preregistration.md` 파일은
+판정 기준은 [`protein_design_sc_protocol.md`](protein_design_sc_protocol.md)(2026-10-22) §0.3에 코드 실행 전부터 적혀 있었고,
+결과를 본 뒤 완화하거나 변경하지 않았습니다. 다만 이를 담은 [`preregistration.md`](preregistration.md) 파일은
 **분석을 마친 뒤에 작성**되었으므로, 선후를 증명할 커밋 기록은 없습니다.
-그 사실과 "데이터를 본 뒤에 내린 결정" 목록을 `preregistration.md`에 전부 적었습니다.
+그 사실과 "데이터를 본 뒤에 내린 결정" 목록을 [`preregistration.md`](preregistration.md)에 전부 적었습니다.
 
 ```
 성공 판정 (설계 1건 단위)
@@ -98,15 +98,23 @@ H0: 차이 없음
 | S2 random | 3 | 4.81 | 0.70 | 78.6 | 53.5 | 0.14 | 0.03 |
 
 S1 = ESMFold 단량체, S2 = AF2-multimer 복합체. **두 예측기는 입력도 모델도 다르므로 한 축에서 비교하지 않습니다.**
-S2 13건의 개별 값은 `work/04_metrics/table1.md` 표 1b 참조.
+S2 13건의 개별 값은 [`work/04_metrics/table1.md`](work/04_metrics/table1.md) 표 1b 참조.
 
-### Fig 1 — 그룹별 scRMSD 분포 (`figures/fig1_scrmsd.png`)
+### Fig 1 — 그룹별 scRMSD 분포
 
-예측기별 2패널. 점선은 사전 등록 임계값 2.0 Å. N이 작으므로 개별 점을 모두 표시했습니다.
+![Fig 1 — scRMSD by group, split by predictor](figures/fig1_scrmsd.png)
 
-### Fig 2 — scRMSD vs pLDDT (`figures/fig2_scrmsd_vs_plddt.png`)
+예측기별 2패널(왼쪽 S2 AF2-multimer 복합체, 오른쪽 S1 ESMFold 단량체).
+점선은 사전 등록 임계값 2.0 Å. N이 작으므로 개별 점을 모두 표시했습니다.
+
+### Fig 2 — scRMSD vs pLDDT
+
+![Fig 2 — scRMSD versus pLDDT](figures/fig2_scrmsd_vs_plddt.png)
 
 색 = 그룹, 모양 = 예측기(`o` S2 / `^` S1).
+오른쪽 위에 외따로 찍힌 `random [S2]` 점이 random_s3입니다 —
+pLDDT 85.4로 높은데 scRMSD는 5.50 Å으로 최악입니다. **신뢰도 지표가
+정확도의 대리 지표가 아니라는 것**을 한 점으로 보여줍니다.
 
 ### (1) H1 지지 — 두 예측기 모두
 
@@ -188,7 +196,7 @@ native보다 높게 나왔지만, 같은 실행에서 **무작위 치환 대조�
 6. **단일 타깃.** 일반화를 주장할 수 없습니다.
 7. **재설계 영역 정의를 원문 프로토콜에서 변경했습니다.** ANARCI 대신 "인터페이스(4.5 Å) ∪ CDR3"를
    사용했으며, IMGT CDR1/CDR2 전체를 포함하지 않습니다. 사유와 영향은
-   `work/01_clean/README_definition_note.md`에 기록했습니다.
+   [`work/01_clean/README_definition_note.md`](work/01_clean/README_definition_note.md)에 기록했습니다.
 8. **US-align 미사용.** Biopython Cα 중첩으로 대체했습니다. inverse folding은 길이를 보존하므로
    Cα 대응은 1:1로 정확하지만, TM-score는 최적 중첩이 아닌 RMSD-최적 중첩에서 계산한
    **근사값**(`tm_score_approx`)입니다.
@@ -210,10 +218,10 @@ git clone <this-repo> && cd vhh-mpnn-selfconsistency
 
 노트북은 **자신이 있는 폴더를 저장소 루트로 인식**하므로(`LOCAL_ROOT = cwd`),
 clone 위치에 관계없이 그대로 동작합니다. 실행 결과를 담은 노트북은
-`protein_design_sc_executed.ipynb`에 출력과 함께 보존돼 있습니다.
+[`protein_design_sc_executed.ipynb`](protein_design_sc_executed.ipynb)에 출력과 함께 보존돼 있습니다.
 
 노트북은 Colab과 로컬 Windows 양쪽에서 동작합니다. 로컬 환경 구축과 단계별 실행 환경은
-`COLAB_RUNBOOK.md` 참조. GPU 없이 로컬에서 돌릴 경우 ProteinMPNN(CPU, 8서열/27초)까지만
+[`COLAB_RUNBOOK.md`](COLAB_RUNBOOK.md) 참조. GPU 없이 로컬에서 돌릴 경우 ProteinMPNN(CPU, 8서열/27초)까지만
 가능하며, 재예측 단계는 GPU가 필요합니다.
 
 ---
@@ -247,7 +255,7 @@ figures/
   fig1_scrmsd.png  fig2_scrmsd_vs_plddt.png
 ```
 
-상세 분석과 해석은 `RESULTS_ANALYSIS.md` 참조.
+상세 분석과 해석은 [`RESULTS_ANALYSIS.md`](RESULTS_ANALYSIS.md) 참조.
 
 ---
 
