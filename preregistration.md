@@ -212,7 +212,21 @@ git log --oneline -- work/05_rosetta/           # 결과가 처음 들어온 커
 ### 실행 환경
 
 PyRosetta는 네이티브 Windows를 지원하지 않습니다(WSL 또는 Linux 휠).
-따라서 이 스테이지는 S1·S2와 마찬가지로 **Colab 전용**입니다.
+PyMOL도 PyPI의 Windows 휠이 의존 DLL을 번들하지 않아 import 단계에서 실패합니다.
+따라서 이 스테이지는 **WSL2(Ubuntu 22.04)** 에서 실행합니다. Colab도 가능하지만
+CPU 작업이므로 GPU 세션을 쓸 이유가 없습니다.
+
+검증본 (2026-11-02):
+
+| | |
+|---|---|
+| PyRosetta | 2026.39 (`PyRosetta4.Release.python310.ubuntu`) |
+| pymol-open-source | 3.2.0a0 |
+| Python | 3.10.12 (`.venv-linux`, WSL2 Ubuntu 22.04) |
+
+주의: WSL의 conda `base`(Python 3.7)가 활성인 채로 venv를 만들면 3.7 환경이
+생성되어 두 패키지 모두 설치되지 않습니다. `conda deactivate` 후
+`/usr/bin/python3`를 명시하십시오.
 
 ### 라이선스
 

@@ -97,6 +97,26 @@ PyRosetta를 쓸 수 없는 독자를 위해, 이 스테이지의 기하 지표 
 
 ---
 
+## 실행 환경 (검증본)
+
+PyRosetta·PyMOL 모두 네이티브 Windows를 지원하지 않습니다.
+이 스테이지는 WSL2에서 실행했습니다.
+
+| | |
+|---|---|
+| OS | Ubuntu 22.04 (WSL2) |
+| Python | 3.10.12 (`.venv-linux`) |
+| PyRosetta | 2026.39 (`PyRosetta4.Release.python310.ubuntu`) |
+| pymol-open-source | 3.2.0a0 (델타 B용) |
+| 검증 일자 | 2026-11-02 |
+
+**흔한 함정:** conda `base`가 활성인 채 `python3 -m venv`를 하면 venv가
+conda의 Python으로 만들어집니다. 본 환경에서는 base가 3.7이라
+`pymol-open-source`(3.9 이상)의 설치 후보가 아예 없다는 오류가 났습니다.
+`conda deactivate` 후 `/usr/bin/python3`를 명시해야 합니다.
+
+---
+
 ## 산출물
 
 | 파일 | 내용 |
