@@ -74,6 +74,12 @@ H0: 차이 없음
 | 전처리 | PDBFixer 1.x + OpenMM 8.6.1 (측쇄 보완, 말단 결측은 보완하지 않음) |
 | 구조 비교 | Biopython 1.88 Cα 중첩 (US-align 미사용 — 아래 한계 참조) |
 | 기타 | numpy 2.1.3, pandas 2.2.3, matplotlib 3.10.0, torch 2.11.0+cu130 |
+| 계면 점수 (탐색적) | PyRosetta 2026.39 `python310.ubuntu`, ref2015, WSL2 Ubuntu 22.04 / Python 3.10.12 |
+| 구조 렌더링 | pymol-open-source 3.2.0a0, 헤드리스(`pymol -cq`), 같은 WSL2 환경 |
+
+셀 `[45]`·`[46]`과 `scripts/06_render.py`는 **네이티브 Windows에서 돌지 않습니다.**
+PyRosetta는 Linux 휠만 제공하고, PyMOL은 PyPI Windows 휠이 의존 DLL을 번들하지
+않아 import에서 실패합니다. 해당 단계는 WSL2에서 실행했습니다.
 
 전 단계의 seed·버전·플랫폼은 `work/04_metrics/provenance.json`과 각 출력 CSV의 컬럼에 기록됩니다.
 
@@ -116,6 +122,37 @@ S2 13건의 개별 값은 [`work/04_metrics/table1.md`](work/04_metrics/table1.m
 pLDDT 85.4로 높은데 scRMSD는 5.50 Å으로 최악입니다. **신뢰도 지표가
 정확도의 대리 지표가 아니라는 것**을 한 점으로 보여줍니다.
 
+### Fig 3 — native vs 설계 중첩
+
+![Fig 3 — native versus design superposition](figures/fig3_superposition.png)
+
+회색 = native 사슬 A, 파랑 = 설계 `M2_T0.3_s2`(ESMFold S1 예측).
+주황·연분홍 = 각각의 CDR3. 노란 막대 = Cys110.
+
+**대상은 최저 scRMSD가 아니라 중앙값(1.21 Å)입니다.** 최저값을 쓰면
+"가장 잘된 것"만 보여주는 선택 편향이 되므로, 한계 5에서 지적한 S2 선정 편향과
+같은 기준을 그림에도 적용했습니다. 중첩은 전체 Cα로, 위에 보고한 scRMSD와 같은 정의입니다.
+
+β-샌드위치 프레임워크는 거의 겹치고 CDR3에서 벌어집니다. 재설계 영역이
+설계 자유도를 받은 자리이므로 예상되는 양상이며, 수치로는 (3)의 pLDDT 차이와 대응합니다.
+
+### Fig 4 — 계면 접촉 잔기
+
+![Fig 4 — interface contact residues](figures/fig4_interface_contacts.png)
+
+연청록 표면 = 항원(사슬 B, Toxin A CROPs), 회색 cartoon = VHH(사슬 A).
+주황 막대 = 접촉 잔기 16개 중 CDR3와 겹치지 않는 15개, 연분홍 = CDR3.
+회색 점선 = 3.5 Å 이내 극성 접촉.
+
+이 그림이 [`work/01_clean/README_definition_note.md`](work/01_clean/README_definition_note.md)의
+정의 변경 사유를 시각적으로 보여줍니다. **항원과 맞닿는 면(주황)과 CDR3(연분홍)가
+서로 다른 쪽을 향하고 있고, 16개 접촉 잔기 중 CDR3에 드는 것은 108번 하나뿐입니다.**
+인터페이스 정의만 썼다면 M2가 CDR3를 거의 재설계하지 않았을 것이고,
+그래서 CDR3 전체를 합집합으로 더했습니다.
+
+접촉 잔기를 IMGT CDR1·CDR2로 귀속시키지는 않습니다. ANARCI를 쓰지 않아
+numbering scheme을 검증하지 않았기 때문입니다(한계 7).
+
 ### (1) H1 지지 — 두 예측기 모두
 
 | stage | design | shuffle | random |
@@ -137,6 +174,15 @@ pLDDT 85.4로 높은데 scRMSD는 5.50 Å으로 최악입니다. **신뢰도 지
 recovery와 pLDDT는 평평한데 scRMSD만 단조 증가합니다. 다양성–정확도 트레이드오프가
 실재하되 **서열 복원율로는 보이지 않는다**는 것으로, seq_recovery를 품질 지표로 쓰면 안 되는
 이유를 본 데이터가 직접 보여줍니다.
+
+![Fig 5 — CDR3 backbone ensemble by temperature](figures/fig5_cdr3_ensemble.png)
+
+**Fig 5 — 온도별 CDR3 백본 앙상블.** 파랑 T0.1 / 초록 T0.2 / 빨강 T0.3 / 검정 native,
+온도당 4건. 프레임워크(CDR3 제외) Cα로 중첩했습니다 — 루프끼리 비교하는 것이 목적이라
+Fig 3의 전체 Cα 기준과 다릅니다.
+
+위 표의 scRMSD 증가가 백본에서 어떤 모습인지 보여줍니다. 다만 **온도당 4건이므로
+분포가 아니라 예시입니다.** 이 그림으로 다양성 증가를 정량화하지는 않습니다.
 
 ### (3) pLDDT는 재설계 영역에서 재야 판별력이 있다
 
@@ -172,6 +218,63 @@ native보다 높게 나왔지만, 같은 실행에서 **무작위 치환 대조�
 따라서 **본 산출물은 ipTM을 결과로 보고하지 않고 측정 실패로 보고하며, 계면 재현에
 대해서는 아무것도 주장하지 않습니다.**
 
+### (7) 계면 점수 — Rosetta 교차검증 ⟨A 대기⟩
+
+<!-- ────────────────────────────────────────────────────────────────
+작성 지침 (채우고 나면 이 주석 블록을 지울 것)
+
+셀 [46] 출력의 두 기준에 따라 서술이 갈립니다.
+
+[기준 2 통과 = native가 설계 분포 상위 50% 이내]
+  → "ipTM과 달리 양성 대조군이 작동하는 지표를 확보했다"로 서술.
+     '무엇을 하지 않았는가'의 계면 항목과 한계 2번을 함께 수정할 것.
+
+[기준 2 불통과]
+  → ipTM과 똑같이 **측정 실패로 보고**. 순위화에 쓰지 않는다.
+     사전 등록 §0.4에 그렇게 하기로 미리 적어 두었으므로 그대로 따른다.
+
+[기준 1: 설계 중앙값 < shuffle 중앙값]
+  → 통과면 "조성이 같은 셔플보다 계면이 낫다"로, (1)의 scRMSD 결과와 같은 구조.
+  → 불통과면 그대로 적고, 동적 범위가 좁다는 §0.4의 사전 판단과 연결.
+
+어느 쪽이든 아래 세 문장은 유지할 것:
+  - dG_separated는 REU이며 kcal/mol이 아니다. 절대값을 해석하지 않는다.
+  - 결합 친화도 예측이 아니라 순위화 보조 지표다.
+  - 개별 설계 순위에는 쓰지 않는다 (파일럿에서 반복 간 산포 13.8 REU 관측).
+──────────────────────────────────────────────────────────────── -->
+
+ipTM이 실패해 계면에 대해 아무 주장도 하지 못한 상태였습니다((6) 참조).
+AlphaFold-Multimer에 의존하지 않는 경로로 계면을 다시 평가했습니다.
+native 결정 백본에 설계 서열을 threading하고 PyRosetta로 계면을 분해했습니다.
+
+| 그룹 | dG_separated (REU) | dSASA_int (Å²) | hbonds_int |
+|---|---|---|---|
+| native | ⟨A 대기⟩ | ⟨A 대기⟩ | ⟨A 대기⟩ |
+| design_T0.1 | ⟨A 대기⟩ | ⟨A 대기⟩ | ⟨A 대기⟩ |
+| design_T0.2 | ⟨A 대기⟩ | ⟨A 대기⟩ | ⟨A 대기⟩ |
+| design_T0.3 | ⟨A 대기⟩ | ⟨A 대기⟩ | ⟨A 대기⟩ |
+| shuffle | ⟨A 대기⟩ | ⟨A 대기⟩ | ⟨A 대기⟩ |
+| random | ⟨A 대기⟩ | ⟨A 대기⟩ | ⟨A 대기⟩ |
+
+![Fig 6 — Rosetta interface score](figures/fig6_rosetta_interface.png)
+
+**판정** ⟨A 대기⟩
+
+**물리 점수와 예측기 신뢰도의 상관** ⟨A 대기⟩
+(Spearman ρ: dG vs scRMSD = ⟨A 대기⟩, dG vs pLDDT_cdr = ⟨A 대기⟩)
+
+상관이 약하게 나오더라도 그것이 음성 결과는 아닙니다. 두 축이 독립된 정보를
+담는다는 뜻이고, 교차검증 지표로서는 오히려 그쪽이 가치가 큽니다.
+
+**이 지표가 아닌 것.** `dG_separated`는 Rosetta Energy Unit이며 kcal/mol이
+아닙니다. 절대값을 해석하지 않습니다. 결합 친화도 예측이 아니라 후보 순위화의
+보조 지표이며, 실험 ΔΔG와의 상관은 중간 수준으로 보고되어 있습니다.
+**개별 설계 간 순위에는 사용하지 않습니다** — 파일럿에서 설계 하나의 반복 간
+산포가 13.8 REU로, 설계와 native의 차이와 같은 자릿수였습니다.
+이는 사전 등록 §0.4에 실행 전부터 적어 둔 판단과 일치합니다.
+
+상세는 [`work/05_rosetta/README_rosetta_note.md`](work/05_rosetta/README_rosetta_note.md).
+
 ### 사전 등록 기준 통과 집계
 
 | 적용 | 통과 |
@@ -180,12 +283,15 @@ native보다 높게 나왔지만, 같은 실행에서 **무작위 치환 대조�
 | S2 (scRMSD + pLDDT) | 4 / 13 |
 | **S2 (scRMSD + pLDDT + ipTM 전부)** | **설계 6건 중 1건** (M1_T0.1_s2) |
 | S2 native (양성 대조군) | **불통과** (pLDDT 78.9, ipTM 0.12) |
+| §0.4 기준 1 (설계 < shuffle, 탐색적) | ⟨A 대기⟩ |
+| §0.4 기준 2 (native 상위 50%, 탐색적) | ⟨A 대기⟩ |
 
 ---
 
 ## 한계
 
 1. **실험 검증 없음.** in silico self-consistency는 발현성·결합력의 대리 지표가 아닙니다.
+   델타 A의 계면 점수도 계산값이며 결합을 입증하지 않습니다.
 2. **ipTM 측정 실패.** 양성 대조군이 임계값에 미달하여 계면 재현을 평가할 수 없었습니다.
    AlphaFold-Multimer의 항체–항원 복합체 예측 성능이 일반 복합체보다 크게 낮다는 것은
    보고된 바입니다 — 427개 복합체 벤치마크에서 상위 1순위 예측이 medium 이상 정확도에
@@ -255,8 +361,18 @@ work/04_metrics/
   cys_retention.csv           이황화결합 보존율
   table1.md                   표 1a / 1b
   provenance.json             seed·버전·플랫폼
+work/05_rosetta/                (탐색적 — 사전 등록 §0.4)
+  rosetta_interface.csv       설계별 계면 점수 중앙값 + provenance
+  rosetta_interface_raw.csv   반복별 원시값 (산포 확인용)
+  README_rosetta_note.md      가정·한계·라이선스 고지
 figures/
   fig1_scrmsd.png  fig2_scrmsd_vs_plddt.png
+  fig3_superposition.png  fig4_interface_contacts.png  fig5_cdr3_ensemble.png
+  fig6_rosetta_interface.png
+  scripts/*.pml               그림을 만든 PyMOL 스크립트 (생성물이자 검증 대상)
+  README.md                   그림별 선택 근거
+scripts/
+  06_render.py                .pml 생성 + 헤드리스 렌더링
 ```
 
 상세 분석과 해석은 [`RESULTS_ANALYSIS.md`](RESULTS_ANALYSIS.md) 참조.
