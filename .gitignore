@@ -32,3 +32,7 @@ work/05_rosetta/relaxed/
 # PyRosetta·PyMOL은 네이티브 Windows를 지원하지 않습니다.
 # Windows의 .venv(uv, 3.11)와 별개로 WSL2에 3.10 환경을 둡니다.
 .venv-linux/
+
+# --- 지원서 초안 (공개 금지) -----------------------------------------
+# 이 레포는 공개 포트폴리오입니다. 지원서·개인정보는 추적하지 않습니다.
+_application/
