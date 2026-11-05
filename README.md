@@ -1,5 +1,7 @@
 # VHH inverse-folding self-consistency benchmark
 
+**한국어** | [English](README.en.md)
+
 ProteinMPNN으로 재설계한 나노바디 서열이, 독립적인 구조 예측기로 되돌렸을 때
 원본 backbone을 재현하는가(self-consistency)를 음성·양성 대조군과 함께 측정한 벤치마크 실습.
 
